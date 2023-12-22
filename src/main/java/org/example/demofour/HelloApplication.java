@@ -11,10 +11,11 @@ import java.util.Objects;
 public class HelloApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("hello-view.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 1080, 720);
+        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("executor-view.fxml"));
+        Scene scene = new Scene(fxmlLoader.load(), 1920, 1080);
         scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/styles.css")).toExternalForm());
-        stage.setTitle("Hello!");
+        stage.setTitle("KotlinExecutor");
+
         stage.setScene(scene);
         stage.show();
     }

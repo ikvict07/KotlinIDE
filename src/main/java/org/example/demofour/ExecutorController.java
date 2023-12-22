@@ -5,7 +5,12 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.ProgressIndicator;
+import javafx.scene.input.Clipboard;
+import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import org.example.demofour.executor.MyExecutor;
 import org.fxmisc.richtext.CodeArea;
@@ -47,14 +52,14 @@ public class ExecutorController implements Initializable {
                     + "|(?<COMMENT>" + COMMENT_PATTERN + ")"
     );
     private static final int BUFFER_SIZE = 50;
-    public ListView<String> output;
+    public ListView<Label> output;
+    public ProgressIndicator progressIndicator;
     @FXML
     private AnchorPane placeForCodeArea;
     private CodeArea codeArea;
     private String sourceCode;
     @FXML
     private Button runButton;
-    private List<String> lineBuffer = new ArrayList<>(BUFFER_SIZE);
 
     public static StyleSpans<Collection<String>> computeHighlighting(String text) {
         Matcher matcher = PATTERN.matcher(text);
@@ -106,32 +111,60 @@ public class ExecutorController implements Initializable {
                     codeArea.setStyleSpans(0, computeHighlighting(codeArea.getText()));
                 });
 
+        for (int i = 0; i < 50; i++) {
+            codeArea.appendText("\n");
+        }
+
         runButton.setOnAction(event -> run());
+
+        output.setOnKeyPressed(event -> {
+            if (event.isControlDown() && event.getCode() == KeyCode.C) {
+                Label selectedLabel = output.getSelectionModel().getSelectedItem();
+                if (selectedLabel != null) {
+                    final Clipboard clipboard = Clipboard.getSystemClipboard();
+                    final ClipboardContent content = new ClipboardContent();
+                    content.putString(selectedLabel.getText());
+                    clipboard.setContent(content);
+                }
+            }
+        });
     }
 
     private void run() {
         sourceCode = codeArea.getText();
         generateKotlin(sourceCode);
         MyExecutor executor = new MyExecutor();
-        executor.execute(line -> {
-//            System.out.println("HERE " + line);
-            lineBuffer.add(line);
-            if (lineBuffer.size() >= BUFFER_SIZE) {
-                flushBuffer();
-            }
-        }, output);
-        flushBuffer();
-    }
+        changeIndicatorState(true);
+        executor.execute(lines -> {
+                    for (String line : lines.split("\n")) {
+                        Platform.runLater(() -> {
+                            Label label = new Label(line);
+                            label.setOnMouseClicked(event -> {
+                                Pattern linePattern = Pattern.compile(".*\\.kts:(\\d+):\\d+: error: .*");
+                                Matcher matcher = linePattern.matcher(label.getText());
+                                if (matcher.find()) {
+                                    int lineNumber = Integer.parseInt(matcher.group(1));
+                                    Platform.runLater(() -> {
+                                        codeArea.showParagraphAtTop(lineNumber - 1);
+                                        codeArea.moveTo(lineNumber - 1, 0);
+                                    });
+                                    System.out.println(lineNumber);
+                                }
+                            });
+                            output.getItems().add(label);
 
-    // Измените flushBuffer():
-    private void flushBuffer() {
-        String text = String.join("\n", lineBuffer);
-        Platform.runLater(() -> {
-            // Разделите text на строки и добавьте их в output
-            output.getItems().addAll(text.split("\n"));
-        });
-        System.out.println(text);
-        lineBuffer.clear();
+                            // Check if the line is an error and if so, change its style
+                            Pattern errorPattern = Pattern.compile(".*\\.kts:\\d+:\\d+: error: .*");
+                            Matcher matcher = errorPattern.matcher(line);
+                            if (matcher.find()) {
+                                System.out.println("Error found: " + line);
+                                label.setStyle("-fx-text-fill: red;");
+                            }
+                        });
+                    }
+                },
+                output,
+                () -> changeIndicatorState(false));
     }
 
     private void generateKotlin(String sourceCode) {
@@ -142,6 +175,10 @@ public class ExecutorController implements Initializable {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private void changeIndicatorState(Boolean visible) {
+        progressIndicator.setVisible(visible);
     }
 
 }

@@ -1,33 +1,87 @@
 .root {
     -fx-font-family: "Consolas";
     -fx-font-size: 12;
+    -fx-background-color: #2b2b2b;
+}
+
+.code-area .text {
+    -fx-fill: #a9b7c6;
 }
 
 .code-area .keyword {
-    -fx-fill: blue;
+    -fx-fill: #ffc66d;
     -fx-font-weight: bold;
 }
 
 .code-area .paren {
-    -fx-fill: darkgreen;
+    -fx-fill: #a9b7c6;
 }
 
 .code-area .brace {
-    -fx-fill: brown;
+    -fx-fill: #a9b7c6;
 }
 
 .code-area .bracket {
-    -fx-fill: olive;
+    -fx-fill: #a9b7c6;
 }
 
 .code-area .semicolon {
-    -fx-fill: orchid;
+    -fx-fill: #a9b7c6;
 }
 
 .code-area .string {
-    -fx-fill: darkgoldenrod;
+    -fx-fill: #a5c261;
 }
 
 .code-area .comment {
-    -fx-fill: gray;
+    -fx-fill: #808080;
+}
+
+#placeForCodeArea .content {
+    -fx-background-color: #3c3f41;
+}
+
+#output {
+    -fx-background-color: #3c3f41;
+}
+
+#output .list-cell {
+    -fx-background-color: #3c3f41;
+    -fx-text-fill: #a9b7c6;
+}
+
+#output .list-cell .label {
+    -fx-text-fill: #a9b7c6;
+}
+
+#output .scroll-bar {
+    -fx-background-color: #3c3f41;
+}
+
+#output .scroll-bar .thumb {
+    -fx-background-color: #808080;
+}
+
+#runButton {
+    -fx-background-color: #3c3f41;
+    -fx-text-fill: #a9b7c6;
+    -fx-border-color: #3c3f41;
+}
+
+#progressIndicator {
+    -fx-progress-color: #6897bb;
+}
+.code-area {
+    -fx-background-color: #3c3f41;
+}
+
+.code-area .lineno {
+    -fx-fill: #808080; /* Цвет текста */
+    -fx-background-color: #3c3f41; /* Цвет фона */
+    -fx-font-size: 12px; /* Размер шрифта */
+}
+
+#titleBar {
+    -fx-background-color: #2b2b2b; /* choose desired color */
+    /* other styles as desired, like padding */
 }
