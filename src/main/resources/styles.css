@@ -1,0 +1,33 @@
+.root {
+    -fx-font-family: "Consolas";
+    -fx-font-size: 12;
+}
+
+.code-area .keyword {
+    -fx-fill: blue;
+    -fx-font-weight: bold;
+}
+
+.code-area .paren {
+    -fx-fill: darkgreen;
+}
+
+.code-area .brace {
+    -fx-fill: brown;
+}
+
+.code-area .bracket {
+    -fx-fill: olive;
+}
+
+.code-area .semicolon {
+    -fx-fill: orchid;
+}
+
+.code-area .string {
+    -fx-fill: darkgoldenrod;
+}
+
+.code-area .comment {
+    -fx-fill: gray;
+}
