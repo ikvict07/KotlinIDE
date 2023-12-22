@@ -4,10 +4,7 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.ProgressIndicator;
+import javafx.scene.control.*;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.KeyCode;
@@ -51,7 +48,6 @@ public class ExecutorController implements Initializable {
                     + "|(?<STRING>" + STRING_PATTERN + ")"
                     + "|(?<COMMENT>" + COMMENT_PATTERN + ")"
     );
-    private static final int BUFFER_SIZE = 50;
     public ListView<Label> output;
     public ProgressIndicator progressIndicator;
     @FXML
@@ -137,34 +133,49 @@ public class ExecutorController implements Initializable {
         changeIndicatorState(true);
         executor.execute(lines -> {
                     for (String line : lines.split("\n")) {
+                        Label textField = new Label(line);
                         Platform.runLater(() -> {
-                            Label label = new Label(line);
-                            label.setOnMouseClicked(event -> {
-                                Pattern linePattern = Pattern.compile(".*\\.kts:(\\d+):\\d+: error: .*");
-                                Matcher matcher = linePattern.matcher(label.getText());
-                                if (matcher.find()) {
-                                    int lineNumber = Integer.parseInt(matcher.group(1));
-                                    Platform.runLater(() -> {
-                                        codeArea.showParagraphAtTop(lineNumber - 1);
-                                        codeArea.moveTo(lineNumber - 1, 0);
-                                    });
-                                    System.out.println(lineNumber);
+                            textField.setOnMouseClicked(event -> {
+                                Pattern errorMatcher = Pattern.compile(".*\\.kts:(\\d+):\\d+: .*");
+                                Matcher lineMatcher = errorMatcher.matcher(textField.getText());
+                                if (lineMatcher.find()) {
+                                    int lineNumber = Integer.parseInt(lineMatcher.group(1));
+                                    moveToErrorLine(lineNumber);
+                                }
+                                Pattern exceptionPattern = Pattern.compile(".*\\.kts:(\\d+).*");
+                                Matcher exceptionMatcher = exceptionPattern.matcher(line);
+                                System.out.println(line);
+                                if (exceptionMatcher.find()) {
+                                    int lineNumber = Integer.parseInt(exceptionMatcher.group(1));
+                                    moveToErrorLine(lineNumber);
                                 }
                             });
-                            output.getItems().add(label);
-
-                            // Check if the line is an error and if so, change its style
-                            Pattern errorPattern = Pattern.compile(".*\\.kts:\\d+:\\d+: error: .*");
-                            Matcher matcher = errorPattern.matcher(line);
-                            if (matcher.find()) {
-                                System.out.println("Error found: " + line);
-                                label.setStyle("-fx-text-fill: red;");
-                            }
+                            output.getItems().add(textField);
                         });
+
+                        Pattern errorMatcher = Pattern.compile(".*\\.kts:(\\d+):\\d+: .*");
+                        Matcher lineMatcher = errorMatcher.matcher(textField.getText());
+                        if (lineMatcher.find()) {
+                            textField.setStyle("-fx-text-fill: red;");
+                        }
+
+                        Pattern exceptionPattern = Pattern.compile(".*\\.kts:(\\d+).*");
+                        Matcher exceptionMatcher = exceptionPattern.matcher(line);
+                        System.out.println(line);
+                        if (exceptionMatcher.find()) {
+                            textField.setStyle("-fx-text-fill: red;");
+                        }
                     }
                 },
                 output,
                 () -> changeIndicatorState(false));
+    }
+
+    private void moveToErrorLine(int lineNumber) {
+        Platform.runLater(() -> {
+            codeArea.showParagraphAtTop(lineNumber - 1);
+            codeArea.moveTo(lineNumber - 1, 0);
+        });
     }
 
     private void generateKotlin(String sourceCode) {
