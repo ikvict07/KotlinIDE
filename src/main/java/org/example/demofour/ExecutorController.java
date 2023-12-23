@@ -179,7 +179,7 @@ public class ExecutorController implements Initializable {
     }
 
     private void generateKotlin(String sourceCode) {
-        File file = new File("src/main/java/TempKotlin.kts");
+        File file = new File("TempKotlin.kts");
 
         try (FileWriter writer = new FileWriter(file)) {
             writer.write(sourceCode);

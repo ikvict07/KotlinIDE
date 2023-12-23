@@ -1,9 +1,19 @@
 plugins {
+    id 'com.github.johnrengelman.shadow' version '7.1.2'
     id 'java'
     id 'application'
     id 'org.javamodularity.moduleplugin' version '1.8.12'
     id 'org.openjfx.javafxplugin' version '0.0.13'
     id 'org.beryx.jlink' version '2.25.0'
+}
+
+shadowJar {
+    archiveBaseName.set('app')
+    archiveClassifier.set('')
+    archiveVersion.set('')
+    manifest {
+        attributes 'Main-Class': 'org.example.demofour.HelloApplication'
+    }
 }
 
 group 'org.example'
@@ -47,6 +57,14 @@ dependencies {
     // Here is your added dependency
     implementation('org.fxmisc.richtext:richtextfx:0.10.6')
 
+    implementation 'org.openjfx:javafx-base:17.0.6'
+    implementation 'org.openjfx:javafx-controls:17.0.6'
+    implementation 'org.openjfx:javafx-fxml:17.0.6'
+    implementation 'org.openjfx:javafx-graphics:17.0.6'
+    implementation 'org.openjfx:javafx-media:17.0.6'
+    implementation 'org.openjfx:javafx-web:17.0.6'
+    implementation 'org.openjfx:javafx-swing:17.0.6'
+
     testImplementation("org.junit.jupiter:junit-jupiter-api:${junitVersion}")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${junitVersion}")
 }
@@ -66,3 +84,36 @@ jlink {
 jlinkZip {
     group = 'distribution'
 }
+
+jar {
+    manifest {
+        attributes 'Main-Class': 'org.example.demofour.HelloApplication'
+    }
+}
+compileJava {
+    doFirst {
+        options.compilerArgs = [
+            '--module-path', classpath.asPath,
+            '--add-modules', 'javafx.controls,javafx.fxml'
+        ]
+    }
+}
+
+run {
+    doFirst {
+        jvmArgs = [
+            '--module-path', classpath.asPath,
+            '--add-modules', 'javafx.controls,javafx.fxml'
+        ]
+    }
+}
+
+tasks.register('runApp', JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'org.example.demofour.HelloApplication'
+    jvmArgs = [
+            '--module-path', classpath.asPath,
+            '--add-modules', 'javafx.controls,javafx.fxml'
+    ]
+}
+
