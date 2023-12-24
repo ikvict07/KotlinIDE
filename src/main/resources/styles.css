@@ -62,7 +62,7 @@
     -fx-background-color: #808080;
 }
 
-#runButton {
+.button {
     -fx-background-color: #3c3f41;
     -fx-text-fill: #a9b7c6;
     -fx-border-color: #3c3f41;
@@ -71,17 +71,43 @@
 #progressIndicator {
     -fx-progress-color: #6897bb;
 }
+
 .code-area {
     -fx-background-color: #3c3f41;
 }
 
 .code-area .lineno {
-    -fx-fill: #808080; /* Цвет текста */
-    -fx-background-color: #3c3f41; /* Цвет фона */
-    -fx-font-size: 12px; /* Размер шрифта */
+    -fx-fill: #808080;
+    -fx-background-color: #3c3f41;
+    -fx-font-size: 12px;
 }
 
 #titleBar {
-    -fx-background-color: #2b2b2b; /* choose desired color */
-    /* other styles as desired, like padding */
+    -fx-background-color: #2b2b2b;
+}
+
+#input {
+    -fx-background-color: #3c3f41;
+    -fx-text-fill: #a9b7c6;
+    -fx-border-color: #808080;
+    -fx-border-width: 2px;
+    -fx-border-radius: 5px;
+    -fx-padding: 10px;
+    -fx-font-size: 14px;
+}
+
+#input .styled-text-area {
+    -fx-background-color: #3c3f41;
+}
+
+#input .scroll-bar {
+    -fx-background-color: #3c3f41;
+}
+
+#input .scroll-bar .thumb {
+    -fx-background-color: #808080;
+}
+
+#input .text {
+    -fx-fill: #a9b7c6;
 }
