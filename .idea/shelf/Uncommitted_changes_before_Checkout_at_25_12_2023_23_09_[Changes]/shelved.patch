@@ -1,0 +1,21 @@
+Index: src/main/java/org/example/demofour/Main.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package org.example.demofour;\r\n\r\nimport javafx.application.Application;\r\nimport javafx.fxml.FXMLLoader;\r\nimport javafx.scene.Scene;\r\nimport javafx.stage.Screen;\r\nimport javafx.stage.Stage;\r\n\r\nimport java.io.IOException;\r\nimport java.util.Objects;\r\n\r\npublic class HelloApplication extends Application {\r\n    @Override\r\n    public void start(Stage stage) throws IOException {\r\n        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource(\"executor-view.fxml\"));\r\n        Scene scene = new Scene(fxmlLoader.load(), Screen.getPrimary().getVisualBounds().getWidth(), Screen.getPrimary().getVisualBounds().getHeight());\r\n        scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource(\"/styles.css\")).toExternalForm());\r\n        stage.setTitle(\"KotlinExecutor\");\r\n\r\n        stage.setScene(scene);\r\n        stage.show();\r\n    }\r\n\r\n    public static void main(String[] args) {\r\n        launch();\r\n    }\r\n}
+===================================================================
+diff --git a/src/main/java/org/example/demofour/Main.java b/src/main/java/org/example/demofour/Main.java
+--- a/src/main/java/org/example/demofour/Main.java	
++++ b/src/main/java/org/example/demofour/Main.java	
+@@ -9,10 +9,10 @@
+ import java.io.IOException;
+ import java.util.Objects;
+ 
+-public class HelloApplication extends Application {
++public class Main extends Application {
+     @Override
+     public void start(Stage stage) throws IOException {
+-        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("executor-view.fxml"));
++        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("executor-view.fxml"));
+         Scene scene = new Scene(fxmlLoader.load(), Screen.getPrimary().getVisualBounds().getWidth(), Screen.getPrimary().getVisualBounds().getHeight());
+         scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/styles.css")).toExternalForm());
+         stage.setTitle("KotlinExecutor");
