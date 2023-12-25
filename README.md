@@ -1,6 +1,6 @@
 # Quick Start
 
-Go to link
+Go to link https://drive.google.com/drive/folders/1SEuVEudI0YsOZJikTJML1ti1BAUxPFc2?usp=sharing
 
 download zip
 
